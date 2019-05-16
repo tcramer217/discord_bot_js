@@ -1,6 +1,7 @@
 {
-    "token": "your-api-key-here",
+    "token": "your-api-token-here",
     "prefix": "!",
-    "pruneMax": 100,
-    "pruneMin": 2
+    "pruneMax": 99,
+    "pruneMin": 1,
+    "defaultCooldown": 3
 }

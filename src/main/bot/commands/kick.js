@@ -1,6 +1,9 @@
 module.exports = {
     name: 'kick',
     description: 'Kick the @Mentioned user!',
+    usage: '<user>',
+    args: true,
+    guildOnly: true,
     execute(message, args) {
         if (!message.mentions.users.size) {
             return message.reply('You need to provide a user mention to kick a user.');
