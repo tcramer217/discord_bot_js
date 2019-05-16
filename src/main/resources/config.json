@@ -1,4 +1,6 @@
 {
     "token": "your-api-key-here",
-    "prefix": "!"
+    "prefix": "!",
+    "pruneMax": 100,
+    "pruneMin": 2,
 }
