@@ -1,0 +1,29 @@
+{
+  "name": "discord_bot_js",
+  "version": "0.0.1",
+  "description": "Creating a discord bot to interact with Discord API and interact with users, using the discord.js library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tcramer217/discord_bot_js.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "api",
+    "discord.js",
+    "javascript"
+  ],
+  "author": "Timothy Cramer",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/tcramer217/discord_bot_js/issues"
+  },
+  "homepage": "https://github.com/tcramer217/discord_bot_js#readme",
+  "dependencies": {
+    "discord.js": "^11.5.0"
+  }
+}
