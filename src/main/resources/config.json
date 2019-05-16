@@ -1,5 +1,4 @@
 {
-    "development": {
-        "apiKey": "your-bot-api-key-goes-here"
-    }
+    "token": "your-api-key-here",
+    "prefix": "!"
 }
