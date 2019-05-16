@@ -2,5 +2,5 @@
     "token": "your-api-key-here",
     "prefix": "!",
     "pruneMax": 100,
-    "pruneMin": 2,
+    "pruneMin": 2
 }
