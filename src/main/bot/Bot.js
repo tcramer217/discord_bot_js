@@ -7,31 +7,70 @@ class Bot extends Discord.Client {
     constructor(options) {
         super(options);
 
+        // objects
+        this.activeCommand;
+
+        // strings
+        this.activeCommandName = '';
+        this.args = [];
+        this.message = {};
         this.token = 'use-set-token-to-update';
+
+        // collections
         this.commands = new Discord.Collection();
         this.cooldowns = new Discord.Collection();
 
         this.engage = this.engage.bind(this);
     }
 
+    /** setters **/
+    setToken(token) {
+        this.token = token;
+    }
+
+    setInitialValuesFromMessage(message) {
+        this.message = message;
+        let args = message.content.slice(prefix.length).split(/ +/);
+        let commandName = args.shift().toLowerCase();
+
+        console.log('args', args);
+
+        this.activeCommandName = commandName;
+        this.activeCommand = this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        this.args = args;
+
+        this.updateCommands();
+    }
+
+    /**
+     *
+     * @returns {Array}
+     */
     getArgs() {
-        return message.content.slice(prefix.length).split(/ +/);
+        return this.args;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     getActiveCommandName() {
-        return this.getArgs().shift().toLowerCase();
+        return this.activeCommandName;
     }
 
-    // get the command from the list of stored commands in client
+    /**
+     *
+     * @returns {Command}
+     */
     getActiveCommand() {
-        let commandName = this.getActiveCommandName();
-        return this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        return this.activeCommand;
     }
 
-    // get all commands
+    /**
+     * Update list of available commands
+     */
     updateCommands() {
         const commandFiles = fs.readdirSync('./src/main/bot/commands').filter(file => file.endsWith('.js'));
-        console.log('commandFiles: {}', commandFiles);
         for( const file of commandFiles) {
             const command = require(`./commands/${file}`);
             this.commands.set(command.name, command);
@@ -40,39 +79,34 @@ class Bot extends Discord.Client {
 
     // get the current cooldowns
     updateCooldowns() {
-        let {activeCommand, commands, cooldowns} = this;
+        let activeCommand = this.getActiveCommand();
         // if the command does not exist in the cooldowns collection, add it
-        if (!cooldowns.has(activeCommand.name)) {
-            cooldowns.set(activeCommand.name, new Discord.Collection());
+        if (!this.cooldowns.has(activeCommand.name)) {
+            this.cooldowns.set(activeCommand.name, new Discord.Collection());
         }
 
         const now = Date.now();
-        const timestamps = cooldowns.get(activeCommand.name);
+        const timestamps = this.cooldowns.get(activeCommand.name);
         const cooldownAmt = (activeCommand.cooldown || defaultCooldown) * 1000;
         // if the author already has a timestamp created
-        if (timestamps.has(message.author.id)) {
-            const expiry = timestamps.get(message.author.id) + cooldownAmt;
+        if (timestamps.has(this.message.author.id)) {
+            const expiry = timestamps.get(this.message.author.id) + cooldownAmt;
             // if the cooldown has yet to end...
             // exit and send message with how much longer to wait
             if (now < expiry) {
                 const timeLeft = (expiry - now) / 1000;
-                return message.reply(`please wait ${timeLeft.toFixed(1)} more seconds to use the ${activeCommand.name} command.`)
+                return this.message.reply(`please wait ${timeLeft.toFixed(1)} more seconds to use the ${activeCommand.name} command.`)
             }
         }
 
         // add author id to timestamps collection
-        timestamps.set(message.author.id, now);
+        timestamps.set(this.message.author.id, now);
         // set a timeout for the user's timeout
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmt);
-    }
-
-    setToken(token) {
-        this.token = token;
+        setTimeout(() => timestamps.delete(this.message.author.id), cooldownAmt);
     }
 
     engage() {
 
-        this.updateCommands()
         // Once the client is 'ready', run this code
         // This event will only trigger one time after logging in
         this.once('ready', () => {
@@ -81,7 +115,8 @@ class Bot extends Discord.Client {
         });
 
         this.on('message', message => {
-            const {activeCommand} = this;
+            this.setInitialValuesFromMessage(message);
+
             // Message does not start with prefix or the message author is a bot
             if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -117,6 +152,7 @@ class Bot extends Discord.Client {
 
         this.login(this.token);
     }
+
 }
 
 module.exports = Bot;
