@@ -10,6 +10,7 @@ module.exports = {
         const data = [];
         const { commands } = message.client;
 
+        console.log('args: {}', args);
         if (!args.length) {
             data.push('Here\'s a list of all our commands:');
             data.push(commands.map(command => command.name).join(', '));
@@ -35,7 +36,7 @@ module.exports = {
         data.push(`** NAME: ** ${command.name}`);
         if (command.aliases) data.push(`** ALIASES: ** ${command.aliases}`);
         if (command.description) data.push(`** DESCRIPTION: ** ${command.description}`);
-        if (command.usage) data.push*(`** USAGE: ** ${command.usage}`);
+        if (command.usage) data.push(`** USAGE: ** ${command.usage}`);
         data.push(`** COOLDOWN ** ${command.cooldown || defaultCooldown} second(s)`);
 
         message.channel.send(data, {split: true});
