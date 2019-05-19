@@ -4,7 +4,7 @@ const Discord = require("discord.js");
 const fs = require("fs");
 
 class Bot extends Discord.Client {
-    constructor(options) {
+    constructor(token, options) {
         super(options);
 
         // objects
@@ -14,7 +14,7 @@ class Bot extends Discord.Client {
         this.activeCommandName = '';
         this.args = [];
         this.message = {};
-        this.token = 'use-set-token-to-update';
+        this.token = token;
 
         // collections
         this.commands = new Discord.Collection();
@@ -23,10 +23,13 @@ class Bot extends Discord.Client {
         this.engage = this.engage.bind(this);
     }
 
-    /** setters **/
-    setToken(token) {
-        this.token = token;
-    }
+    /**
+     * Set the bot's api token
+     * @param token
+     */
+    // setToken(token) {
+    //     this.token = token;
+    // }
 
     setInitialValuesFromMessage(message) {
         this.message = message;
