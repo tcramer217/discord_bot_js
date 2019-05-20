@@ -108,6 +108,7 @@ class Bot extends Discord.Client {
             let initiator = messageAsArray.find(word => {
                 return responseBotInitiators[word] ? word : null;
             });
+            if(initiator === undefined) return null;
             let response = responseBotInitiators[initiator].responses[0].imgUrl ?
                     responseBotInitiators[initiator].responses[0].imgUrl : responseBotInitiators[initiator].responses[0].message;
             return this.message.reply(response);
