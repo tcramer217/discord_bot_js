@@ -9,6 +9,14 @@ class Bot extends Discord.Client {
     constructor(token, options) {
         super(options);
 
+        this.token = token;
+        this.initClassVars();
+
+        this.engage = this.engage.bind(this);
+    }
+
+    // TODO : Javascript private variables? I dont want access to these outside of the class...
+    initClassVars() {
         // objects
         this.activeCommand;
 
@@ -16,22 +24,11 @@ class Bot extends Discord.Client {
         this.activeCommandName = '';
         this.args = [];
         this.message = {};
-        this.token = token;
 
         // collections
         this.commands = new Discord.Collection();
         this.cooldowns = new Discord.Collection();
-
-        this.engage = this.engage.bind(this);
     }
-
-    /**
-     * Set the bot's api token
-     * @param token
-     */
-    // setToken(token) {
-    //     this.token = token;
-    // }
 
     setInitialValuesFromMessage(message) {
         this.message = message;
@@ -45,6 +42,10 @@ class Bot extends Discord.Client {
 
         this.activeCommandName = commandName;
         this.activeCommand = this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    }
+
+    set apiKey(token) {
+        this.token = token;
     }
 
     /**
@@ -104,12 +105,12 @@ class Bot extends Discord.Client {
 
         let messageAsArray = this.message.content.split(/ +/);
         if(messageAsArray.length > 0 && messageAsArray.length < 30) {
-            messageAsArray.map(word => {
-                if(responseBotInitiators[word] !== undefined) {
-                    return this.message.reply(responseBotInitiators[word].responses[0].imgUrl ? responseBotInitiators[word].responses[0].imgUrl : responseBotInitiators[word].responses[0].message);
-                }
+            let initiator = messageAsArray.find(word => {
+                return responseBotInitiators[word] ? word : null;
             });
-            // message was just a normal message
+            let response = responseBotInitiators[initiator].responses[0].imgUrl ?
+                    responseBotInitiators[initiator].responses[0].imgUrl : responseBotInitiators[initiator].responses[0].message;
+            return this.message.reply(response);
         }
         return null;
     }
@@ -175,7 +176,7 @@ class Bot extends Discord.Client {
                 console.error(error);
                 message.reply(`There was an error attempting to execute command: ${this.activeCommand}`);
             } finally {
-                // todo: empty golbal vars
+                // this.initClassVars();
             }
 
 
