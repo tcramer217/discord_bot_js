@@ -1,7 +1,5 @@
-// var Bot = require('./src/main/bot/Bot');
+require('dotenv').config();
 const MyBot = require('./src/main/bot/Bot');
 
-const {token} = require('./src/main/resources/config');
-
-let bot = new MyBot(token);
+let bot = new MyBot(process.env.DISCORD_TOKEN);
 bot.engage();

@@ -1,5 +1,4 @@
 {
-    "token": "your-api-token-here",
     "prefix": "!",
     "pruneMax": 99,
     "pruneMin": 1,
