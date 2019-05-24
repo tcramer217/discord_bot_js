@@ -44,10 +44,6 @@ class Bot extends Discord.Client {
         this.activeCommand = this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     }
 
-    set apiKey(token) {
-        this.token = token;
-    }
-
     /**
      *
      * @returns {Command}
@@ -133,7 +129,6 @@ class Bot extends Discord.Client {
     }
 
     engage() {
-
         // Once the client is 'ready', run this code
         // This event will only trigger one time after logging in
         this.once('ready', () => {
