@@ -24,9 +24,11 @@
   },
   "homepage": "https://github.com/tcramer217/discord_bot_js#readme",
   "dependencies": {
+    "bitly": "^5.1.7",
     "discord.js": "^11.5.0",
     "dotenv": "^8.0.0",
     "sequelize": "^5.8.6",
-    "sqlite3": "^4.0.8"
+    "sqlite3": "^4.0.8",
+    "validator": "^11.0.0"
   }
 }
